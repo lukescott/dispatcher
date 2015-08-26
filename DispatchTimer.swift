@@ -1,16 +1,15 @@
 
 import Foundation
-import UIKit
 
 public typealias Timer = DispatchTimer
 
 public class DispatchTimer {
 
-  public convenience init (_ delay: CGFloat, _ callback: Void -> Void) {
+  public convenience init (_ delay: Double, _ callback: Void -> Void) {
     self.init(delay, 0, callback)
   }
 
-  public init (_ delay: CGFloat, _ tolerance: CGFloat, _ callback: Void -> Void) {
+  public init (_ delay: Double, _ tolerance: Double, _ callback: Void -> Void) {
     self.callback = callback
     self.tolerance = tolerance
 
@@ -24,16 +23,16 @@ public class DispatchTimer {
     
     if !gcd.main.isCurrent { dispatch_set_target_queue(queue.dispatch_queue, gcd.current.dispatch_queue) }
     
-    let delay_ns = delay * CGFloat(NSEC_PER_SEC)
+    let delay_ns = delay * Double(NSEC_PER_SEC)
     let time = dispatch_time(DISPATCH_TIME_NOW, Int64(delay_ns))
-    dispatch_source_set_timer(timer, time, UInt64(delay_ns), UInt64(tolerance * CGFloat(NSEC_PER_SEC)))
+    dispatch_source_set_timer(timer, time, UInt64(delay_ns), UInt64(tolerance * Double(NSEC_PER_SEC)))
     dispatch_source_set_event_handler(timer) { [weak self] in let _ = self?.fire() }
     dispatch_resume(timer)
   }
 
   // MARK: Read-only
 
-  public let tolerance: CGFloat
+  public let tolerance: Double
   
   public let callback: Void -> Void
 
